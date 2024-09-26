@@ -88,34 +88,6 @@ function compileCategories(bookmarks) {
         updateDropDownMenu(categories);
     }
 }
-async function renderBookmarks() {
-    showWaitingGif();
-    $("#actionTitle").text("Liste des favoris");
-    $("#createBookmark").show();
-    $("#abort").hide();
-    let Bookmarks = await Bookmarks_API.Get();
-    compileCategories(Bookmarks)
-    eraseContent();
-    if (Bookmarks) {
-        Bookmarks.forEach(Bookmark => {
-            if ((selectedCategory === "") || (selectedCategory === Bookmark.Category))
-                $("#content").append(renderBookmark(Bookmark));
-        });
-        restoreContentScrollPosition();
-        // Attached click events on command icons
-        $(".editCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
-        });
-        $(".deleteCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
-        });
-        // $(".BookmarkRow").on("click", function (e) { e.preventDefault(); })
-    } else {
-        renderError("Service introuvable");
-    }
-}
 function showWaitingGif() {
     $("#content").empty();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));

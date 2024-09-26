@@ -5,17 +5,30 @@ let selectedCategory = "";
 Init_UI();
 
 function Init_UI() {
-    renderBookmarks();
-    $('#createBookmark').on("click", async function () {
+    renderMaths();
+    $('#test').on("click", async function () {
         saveContentScrollPosition();
         renderCreateBookmarkForm();
     });
-    $('#abort').on("click", async function () {
-        renderBookmarks();
-    });
-    $('#aboutCmd').on("click", function () {
+    $('#aideButton').on("click", function () {
         renderAbout();
     });
+}
+function renderMaths() {
+    $("#header").html(`
+            <fieldset>
+                <legend>Url Du site</legend>
+                <input type="text">
+                /api/maths
+                <input type="button" value="Démarrer le test">
+                <input type="button" value="Aide">
+            </fieldset>
+        `);
+    $("#content").html(`
+            <fieldset>
+                <legend>Tests</legend>
+            </fieldset>
+        `);
 }
 
 function renderAbout() {
@@ -40,7 +53,7 @@ function renderAbout() {
                     Collège Lionel-Groulx, automne 2024
                 </p>
             </div>
-        `))
+        `));
 }
 function updateDropDownMenu(categories) {
     let DDMenu = $("#DDMenu");
@@ -86,34 +99,6 @@ function compileCategories(bookmarks) {
                 categories.push(bookmark.Category);
         })
         updateDropDownMenu(categories);
-    }
-}
-async function renderBookmarks() {
-    showWaitingGif();
-    $("#actionTitle").text("Liste des favoris");
-    $("#createBookmark").show();
-    $("#abort").hide();
-    let Bookmarks = await Bookmarks_API.Get();
-    compileCategories(Bookmarks)
-    eraseContent();
-    if (Bookmarks) {
-        Bookmarks.forEach(Bookmark => {
-            if ((selectedCategory === "") || (selectedCategory === Bookmark.Category))
-                $("#content").append(renderBookmark(Bookmark));
-        });
-        restoreContentScrollPosition();
-        // Attached click events on command icons
-        $(".editCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderEditBookmarkForm(parseInt($(this).attr("editBookmarkId")));
-        });
-        $(".deleteCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderDeleteBookmarkForm(parseInt($(this).attr("deleteBookmarkId")));
-        });
-        // $(".BookmarkRow").on("click", function (e) { e.preventDefault(); })
-    } else {
-        renderError("Service introuvable");
     }
 }
 function showWaitingGif() {
