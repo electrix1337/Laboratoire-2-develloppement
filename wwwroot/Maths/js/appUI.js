@@ -18,9 +18,9 @@ function RenderMaths() {
     $("#header").html(`
             <fieldset>
                 <legend>Url Du site</legend>
-                <input type="text">
+                <input type="text" id="urlText">
                 /api/maths
-                <input type="button" value="Démarrer le test">
+                <input type="button" value="Démarrer le test" id="testButton">
                 <input type="button" value="Aide" id="aideButton">
             </fieldset>
         `);
@@ -32,21 +32,27 @@ function RenderMaths() {
                 <div>
             </fieldset>
         `);
-    $("#mathsRepond").on("click", function () {
+    $("#testButton").on("click", function () {
         RenderCalculation();
     });
 }
 
 async function RenderCalculation() {
-    let url = $("#mathsRespond");
-    let urlSplit = url.split();
+    let result = await Maths_API.GetCalculation($("#urlText").val());
 
-    let result = await Maths_API.GetCalculation(values);
+    let str = "";
 
-    $("#mathsRepond").append(
+    if (result == null) {
+        str = "ERREUR";
+    } else {
+        str = `OK ---> ` + JSON.stringify(result);
+    }
+
+    $("#mathsRespond").append(
         $(`
-            
-            
+            <span>
+                ${str}
+            </span><br>
             `));
 }
 
