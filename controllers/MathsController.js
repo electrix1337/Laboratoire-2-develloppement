@@ -5,63 +5,150 @@ export default class MathsController extends Controller {
         super(HttpContext);
     }
 
-
     get() {
         const params = this.HttpContext.path.params;
         const { op, x, y, n } = params;
 
 
+        const binaryOps = ['+',' ', '-', '*', '/', '%'];
+
+        const unaryOps = ['!', 'p', 'np'];
+
+
         let result;
-        const numX = parseFloat(x);
-        const numY = parseFloat(y);
-        const numN = parseInt(n);
-
-        
-
-        switch (op) {
-            case '+':
-            case ' ': 
-                result = this.FormaterXY(op,numX,numY, this.Addition(numX, numY));
-                break;
-            case '-':
-                result = this.FormaterXY(op,numX,numY,this.Soustraction(numX, numY));
-                break;
-            case '*':
-                result = this.FormaterXY(op,numX,numY,this.Multiplication(numX, numY));
-                break;
-            case '/':
-                result = this.FormaterXY(op,numX,numY,this.Diviser(numX, numY));
-                break;
-            case '%':
-                result = this.FormaterXY(op,numX,numY,this.Modulo(numX, numY));
-                break;
-            case '!':
-                result = this.FormaterN(op,n,this.Factorial(numN));
-                break;
-            case 'p':
-                result = this.FormaterN(op,n,this.Prime(numN));
-                break;
-            case 'np':
-                result = this.FormaterN(op,n,this.NthPrime(numN));
-                break;
-            default:
-                result = "operation invalid";
-                break;
+        let numX;
+        let numY;
+        let numN;
+        if (isNaN(x)) {
+            numX = "not a number"
         }
+        else {
+            numX = parseFloat(x);
+        }
+
+        if (isNaN(y)) {
+            numY = "not a number"
+        }
+        else {
+            numY = parseFloat(y)
+        }
+
+        if (isNaN(n)) {
+            numN = "not a number"
+        }
+        else {
+            numN = parseInt(n);
+        }
+
+        if (!op) {
+            this.HttpContext.response.JSON({
+                "error": "Opération inexistante"
+            });
+            return;
+        }
+
+        if (binaryOps.includes(op)) {
+            // xy nombre check
+            if (!numX || !numY) {
+                this.HttpContext.response.JSON({
+                    "op": op,
+                    "x": x || null,
+                    "y": y || null,
+                    "error": "Paramètres manquants"
+                });
+                return;
+            }
+            if (isNaN(numX)) {
+                this.HttpContext.response.JSON({
+                    "op": op,
+                    "x": x,
+                    "y": y,
+                    "error": "'x' est pas un nombre"
+                });
+                return;
+            }
+            if (isNaN(numY)) {
+                this.HttpContext.response.JSON({
+                    "op": op,
+                    "x": x,
+                    "y": y,
+                    "error": "'y' est pas un nombre"
+                });
+                return;
+            }
+
+
+            switch (op) {
+                case '+':
+                case ' ':
+                    result = this.FormaterXY(op, x, y, this.Addition(numX, numY));
+                    break;
+                case '-':
+                    result = this.FormaterXY(op, x, y, this.Soustraction(numX, numY));
+                    break;
+                case '*':
+                    result = this.FormaterXY(op, x, y, this.Multiplication(numX, numY));
+                    break;
+                case '/':
+                    result = this.FormaterXY(op, x, y, this.Diviser(numX, numY));
+                    break;
+                case '%':
+                    result = this.FormaterXY(op, x, y, this.Modulo(numX, numY));
+                    break;
+                default:
+                    result = { "error": "Opération inexistante" };
+            }
+
+        } else if (unaryOps.includes(op)) {
+            if (!n) {
+                this.HttpContext.response.JSON({
+                    "op": op,
+                    "n": n || null,
+                    "error": "Paramètre manquant"
+                });
+                return;
+            }
+            if (isNaN(numN)) {
+                this.HttpContext.response.JSON({
+                    "op": op,
+                    "n": n,
+                    "error": "'n' nombre pas valide"
+                });
+                return;
+            }
+
+
+            switch (op) {
+                case '!':
+                    result = this.FormaterN(op, n, this.Factorial(numN));
+                    break;
+                case 'p':
+                    result = this.FormaterN(op, n, this.Prime(numN));
+                    break;
+                case 'np':
+                    result = this.FormaterN(op, n, this.NthPrime(numN));
+                    break;
+                default:
+                    result = { "error": "Opération inexistante" };
+            }
+
+        } else {
+            this.HttpContext.response.JSON({
+                "op": op,
+                "error": "Opération inexistante"
+            });
+            return;
+        }
+
         this.HttpContext.response.JSON(result);
     }
 
-    FormaterXY(op,x,y,value)
-    {
-        let object = {op,x,y,value};
-        return object;
-       
-
+    FormaterXY(op, x, y, value) {
+        return { op, x, y, value };
     }
-    FormaterN(op,n,value)
-    {
-        let object = {op,n,value};
-        return object;
+
+    FormaterN(op, n, value) {
+        return { op, n, value };
     }
 
     Addition(x, y) {
@@ -78,7 +165,7 @@ export default class MathsController extends Controller {
 
     Diviser(x, y) {
         if (y === 0) {
-            return "peu pas diviser par 0";
+            return "pas divisible par 0";
         }
         return x / y;
     }
@@ -88,7 +175,7 @@ export default class MathsController extends Controller {
     }
 
     Factorial(n) {
-        if (n < 0) return "factorial nest pas possible avec un nombre negatif";
+        if (n < 0) return "factorial pas possible avec un nombre plus petit que 0";
         if (n === 0 || n === 1) return 1;
         let fact = 1;
         for (let i = 2; i <= n; i++) {
@@ -109,7 +196,7 @@ export default class MathsController extends Controller {
         const primes = [];
         let candidate = 2;
         while (primes.length < n) {
-            if (this._isPrime(candidate)) {
+            if (this.Prime(candidate)) {
                 primes.push(candidate);
             }
             candidate++;
