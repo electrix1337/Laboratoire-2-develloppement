@@ -16,39 +16,54 @@ export default class MathsController extends Controller {
         const numY = parseFloat(y);
         const numN = parseInt(n);
 
+        
+
         switch (op) {
             case '+':
             case ' ': 
-                result = this.Addition(numX, numY);
+                result = this.FormaterXY(op,numX,numY, this.Addition(numX, numY));
                 break;
             case '-':
-                result = this.Soustraction(numX, numY);
+                result = this.FormaterXY(op,numX,numY,this.Soustraction(numX, numY));
                 break;
             case '*':
-                result = this.Multiplication(numX, numY);
+                result = this.FormaterXY(op,numX,numY,this.Multiplication(numX, numY));
                 break;
             case '/':
-                result = this.Diviser(numX, numY);
+                result = this.FormaterXY(op,numX,numY,this.Diviser(numX, numY));
                 break;
             case '%':
-                result = this.Modulo(numX, numY);
+                result = this.FormaterXY(op,numX,numY,this.Modulo(numX, numY));
                 break;
             case '!':
-                result = this.Factorial(numN);
+                result = this.FormaterN(op,n,this.Factorial(numN));
                 break;
             case 'p':
-                result = this.Prime(numN);
+                result = this.FormaterN(op,n,this.Prime(numN));
                 break;
             case 'np':
-                result = this.NthPrime(numN);
+                result = this.FormaterN(op,n,this.NthPrime(numN));
                 break;
             default:
                 result = "operation invalid";
                 break;
         }
-
         this.HttpContext.response.JSON(result);
     }
+
+    FormaterXY(op,x,y,value)
+    {
+        let object = {op,x,y,value};
+        return object;
+       
+
+    }
+    FormaterN(op,n,value)
+    {
+        let object = {op,n,value};
+        return object;
+    }
+
     Addition(x, y) {
         return x + y;
     }
