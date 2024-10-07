@@ -1,5 +1,5 @@
 class Maths_API {
-    static API_URL() { return "http://localhost:5000/api/Maths" };
+    static API_URL() { return "https://laboratoire-2-.glitch.me/api/Maths" };
     static async GetAide() {
         return new Promise(resolve => {
             $.ajax({
