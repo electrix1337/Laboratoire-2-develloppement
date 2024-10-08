@@ -49,7 +49,7 @@ export default class MathsController extends Controller {
 
         if (binaryOps.includes(op)) {
             // xy nombre check
-            if (!numX || !numY) {
+            if ((x === undefined || x === null || y === undefined || y === null) && x != 0 && y != 0) {
                 this.HttpContext.response.JSON({
                     "op": op,
                     "x": x || null,
@@ -100,7 +100,7 @@ export default class MathsController extends Controller {
             }
 
         } else if (unaryOps.includes(op)) {
-            if (!n) {
+            if ((n === undefined || n === null)) {
                 this.HttpContext.response.JSON({
                     "op": op,
                     "n": n || null,
