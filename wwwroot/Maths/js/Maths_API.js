@@ -1,33 +1,20 @@
-class Bookmarks_API {
-    static API_URL() { return "http://localhost:5000/api/Maths" };
-    static async Get(id = null) {
+class Maths_API {
+    static API_URL() { return "https://laboratoire-2-.glitch.me/api/Maths" };
+    static async GetAide() {
         return new Promise(resolve => {
             $.ajax({
-                url: this.API_URL() + (id ? "/" + id : ""),
+                url: this.API_URL() + "?",
                 success: contacts => { resolve(contacts); },
                 error: (xhr) => { console.log(xhr); resolve(null); }
             });
         });
     }
-    static async Save(contact, create = true) {
+    static async GetCalculation(url1) {
         return new Promise(resolve => {
             $.ajax({
-                url: this.API_URL(),
-                type: create ? "POST" : "PUT",
-                contentType: 'application/json',
-                data: JSON.stringify(contact),
-                success: (/*data*/) => { resolve(true); },
-                error: (/*xhr*/) => { resolve(false /*xhr.status*/); }
-            });
-        });
-    }
-    static async Delete(id) {
-        return new Promise(resolve => {
-            $.ajax({
-                url: this.API_URL() + "/" + id,
-                type: "DELETE",
-                success: () => { resolve(true); },
-                error: (/*xhr*/) => { resolve(false /*xhr.status*/); }
+                url: url1,
+                success: contacts => { resolve(contacts); },
+                error: (xhr) => { console.log(xhr); resolve(null); }
             });
         });
     }

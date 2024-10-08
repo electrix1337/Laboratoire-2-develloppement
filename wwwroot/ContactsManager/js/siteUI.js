@@ -40,32 +40,6 @@ function renderAbout() {
             </div>
         `))
 }
-async function renderContacts() {
-    showWaitingGif();
-    $("#actionTitle").text("Liste des contacts");
-    $("#createContact").show();
-    $("#abort").hide();
-    let contacts = await API_GetContacts();
-    eraseContent();
-    if (contacts) {
-        contacts.forEach(contact => {
-            $("#content").append(renderContact(contact));
-        });
-        restoreContentScrollPosition();
-        // Attached click events on command icons
-        $(".editCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderEditContactForm(parseInt($(this).attr("editContactId")));
-        });
-        $(".deleteCmd").on("click", function () {
-            saveContentScrollPosition();
-            renderDeleteContactForm(parseInt($(this).attr("deleteContactId")));
-        });
-        $(".contactRow").on("click", function (e) { e.preventDefault(); })
-    } else {
-        renderError("Service introuvable");
-    }
-}
 function showWaitingGif() {
     eraseContent();
     $("#content").append($("<div class='waitingGifcontainer'><img class='waitingGif' src='Loading_icon.gif' /></div>'"));
