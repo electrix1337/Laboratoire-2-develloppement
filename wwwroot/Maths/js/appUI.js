@@ -29,7 +29,7 @@ function RenderMaths() {
             </fieldset>
         `);
     $("#testButton").on("click", function () {
-        CalculateUrl("http://localhost:5000/api/maths?op=+&x=1&y=0");
+        CalculateUrl("http://localhost:5000/api/maths?op=+&x=0&y=1");
         CalculateUrl("http://localhost:5000/api/maths?op=+&x=-111&y=-244");
         CalculateUrl("http://localhost:5000/api/maths?op=-&x=1&y=abc");
         CalculateUrl("http://localhost:5000/api/maths?n=a&op=p");
